@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 
 import classes.Contact;
 import classes.Group;
-import classes.Msg;
+import classes.Msgs;
 import classes.Project;
 import classes.Task;
 import utils.PenelopDevLogger;
@@ -87,11 +87,11 @@ public class FileSystemManager implements DataInterface {
 			return null;
 		}
 	}
-	public ArrayList<Msg>readMsgs() {
+	public ArrayList<Msgs>readMsgs() {
 		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(System.getProperty("user.dir") + this.msgFile));
-			Msg[] json = new Gson().fromJson(bufferedReader, Msg[].class);
-			ArrayList<Msg> msgs = json != null ? new ArrayList<Msg>(Arrays.asList(json)) : new ArrayList<Msg>();
+			Msgs[] json = new Gson().fromJson(bufferedReader, Msgs[].class);
+			ArrayList<Msgs> msgs = json != null ? new ArrayList<Msgs>(Arrays.asList(json)) : new ArrayList<Msgs>();
 			return msgs;
 		} catch (IOException e) {
 			log._("Throwed in readGroups: " + e.getMessage());
@@ -177,7 +177,7 @@ public class FileSystemManager implements DataInterface {
 	 * Write the new projects List in the file projects.json.
 	 * @param projects
 	 */
-	public void writeMsgs(ArrayList<Msg> msgs) {
+	public void writeMsgs(ArrayList<Msgs> msgs) {
 		Gson gson = new Gson();
     	String json = gson.toJson(msgs);
 		try {

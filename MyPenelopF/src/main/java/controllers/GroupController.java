@@ -7,7 +7,6 @@ import Observer.GroupListener;
 import classes.Group;
 import ihm.BaseFrame;
 import ihm.dashboardPanel;
-import Observer.GroupListener;
 import utils.PenelopDevLogger;
 
 public class GroupController implements PenelopeController, GroupListener {
@@ -38,47 +37,20 @@ public class GroupController implements PenelopeController, GroupListener {
 		gDAO.addGroupListener(this);
 	}
 
-	final public GroupDAO getGroupDAO() {
+	final public GroupDAO getDAO() {
 		return this.gDAO;
 	}
 
 	public void CreateGroupTriggered(Group nGroup) {
-		System.out.println("in gCtrl CreateGroup");
+		// System.out.println("in gCtrl CreateGroup");
 		this.gDAO.add(nGroup);
 	}
 
 	public void GroupChangeTriggered() {
-		this.refreshGroup();
-	}
-
-	private void refreshGroup() {
 		ArrayList<Group> retrievedGroups = this.gDAO.get();
         log._("REFRESH GROUP DISCONNECTED FROM DASHBOARD");
         log.groups(retrievedGroups);
         log._("AFTER GROUP");
         this.dashboard.displayGroupPanel();
 	}
-
-	public void DeleteGroupTriggered(Group dGroup) {
-		System.out.println("IN DELETEGROUP TRIGERED");
-		this.gDAO.remove(dGroup);
-	}
-
-	public void UpdateGroupTriggered(Group uGroup) {
-		log._("CREATE CONTACT");
-		log._(uGroup);
-		this.gDAO.update(uGroup);
-
-	}
-
-	public void testCtrl() {
-		log._("INIT GroupController");
-	}
-
-	public void ShowUpdateTriggered(Group group) {
-		log._("SHOW UPDATE Group WITH:");
-		log._(group);
-		this.uForm = new BaseFrame(this, group);
-	}
-
 }

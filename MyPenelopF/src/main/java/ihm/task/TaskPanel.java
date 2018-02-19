@@ -1,110 +1,119 @@
 package ihm.task;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import Observer.TaskListener;
-import Observer.TaskObserver;
 import classes.Task;
-import ihm.FormBuilder;
-import utils.PenelopDevLogger;
+import controllers.TaskController;
+import ihm.BaseFrame;
+import ihm.ViewBuilder;
+// import utils.PenelopDevLogger;
 
-public class TaskPanel extends JPanel implements TaskObserver {
+public class TaskPanel extends JPanel {
 
 	/**
 	 * JPanel requirement
 	 */
 	private static final long serialVersionUID = -2146571445384665490L;
-	private static final PenelopDevLogger log = PenelopDevLogger.get();
-    private FormBuilder _fb = new FormBuilder();
+	// private static final PenelopDevLogger log = PenelopDevLogger.get();
+	private TaskController tCtrl;
+    private ViewBuilder _vb = new ViewBuilder();
 	private JPanel pan;
-    private CardLayout cl;
-	private final Collection<TaskListener> tasksListeners = new ArrayList<TaskListener>();
+	private JPanel taskCards;
+	private JPanel navigation;
+	private CardLayout cl;
 
-	public TaskPanel(JPanel pan, CardLayout cl, ArrayList<Task> tasks) {
-        final TaskPanel self = this;
+	public TaskPanel(JPanel pan, final TaskController tCtrl, CardLayout cl, ArrayList<Task> tasks, Boolean edit) {
+		this.tCtrl = tCtrl;
 		this.pan = pan;
+	    this.pan.setLayout(new BorderLayout());
+	    this.pan.setBorder(BorderFactory.createLineBorder(Color.black));
+	    this.taskCards = new JPanel();
 		this.cl = cl;
-		this.pan.setLayout(this.cl);
-		if (tasks != null) {
-			for (final Task task: tasks)
-			{
-				JLabel tmp = new JLabel("Task N°" + task.getId() + " | Description: " + task.getDescription() + " | Project n°" + task.getPId());
-				JPanel card = new JPanel();
-				card.add(tmp);
-				if (tasksListeners.size() > 0) {
-					JButton del = new JButton("Delete");
-					del.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent event) {
-							self.triggerDeleteTask(task);
-						}
-					});
-					JButton up = new JButton("Update");
-					up.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent event) {
-							self.triggerShowUpdate(task);
-						}
-					});
-					card.add(up);
-					card.add(del);
-				}
-				this.pan.add(card, task.getId().toString());
-			}
-		}
+		this.taskCards.setLayout(this.cl);
+	    this.taskCards.setBorder(BorderFactory.createLineBorder(Color.black));
+	    this.navigation = this._vb.getNavPanel(this.cl, this.taskCards);
+	    if (tasks != null)
+			this.buildTaskCards(tasks, edit);
+		this.pan.add(this.navigation, BorderLayout.PAGE_START);
+		this.pan.add(this.taskCards, BorderLayout.CENTER);
 	}
 
-	public JPanel getPan() {
+	/**
+	 * Allow to retrieve the root point of the view
+	 * @return
+	 */
+	public JPanel getRootPan() {
 		return this.pan;
 	}
-
-	public CardLayout getCard() {
-		return this.cl;
+	
+	public JPanel getCard() {
+		return this.taskCards;
 	}
-
-	public void addTaskListener(TaskListener listener) {
-		if (!this.tasksListeners.contains(listener)) {
-			this.tasksListeners.add(listener);
+	
+	/**
+	 * @param t
+	 * @return a setted view to display one task
+	 */
+	private JPanel displayTask(Task t) {
+		JPanel taskPanel = new JPanel();
+		taskPanel.setLayout(new GridLayout(3, 2, 2, 2));
+		taskPanel.setSize(new Dimension(3000, 3000));
+		taskPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		JLabel idLab = new JLabel("Task n°: ");
+		JLabel id = new JLabel(t.getId().toString());
+		JLabel descriptionLab = new JLabel("Description: ");
+		JLabel description = new JLabel(t.getDescription());
+		taskPanel.add(idLab);
+		taskPanel.add(id);
+		taskPanel.add(descriptionLab);
+		taskPanel.add(description);
+		return taskPanel;
+	}
+	
+	/**
+	 * Build the cards swing component 
+	 * @param tasks
+	 * @param edit
+	 */
+	private void buildTaskCards(ArrayList<Task> tasks, Boolean edit) {
+		final TaskPanel self = this;
+		for (final Task task: tasks)
+		{
+			JPanel card = new JPanel();
+			card.add(this.displayTask(task));
+			if (edit) {
+				JPanel btnPanel = this._vb.getTwoBtnPanel();
+				JButton del = new JButton("Delete");
+				del.setSize(this._vb.getButtonSize());
+				del.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+						self.tCtrl.getDAO().remove(task);
+					}
+				});
+				JButton up = new JButton("Update");
+				up.setSize(this._vb.getButtonSize());
+				up.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+    					new BaseFrame(tCtrl, task);
+					}
+				});
+				btnPanel.add(up);
+				btnPanel.add(del);
+				card.add(btnPanel);
+			}
+			this.taskCards.add(card, task.getId().toString());
 		}
-	}
-
-	public void removeTaskListener(TaskListener listener) {
-		if (this.tasksListeners.contains(listener)) {
-			this.tasksListeners.remove(listener);
-		}
-	}
-
-	public void triggerTaskChange() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void triggerShowUpdate(Task task) {
-		for (TaskListener listener: this.tasksListeners) {
-			listener.ShowUpdateTriggered(task);
-		}
-	}
-
-
-	public void triggerDeleteTask(Task task) {
-		for (TaskListener listener: this.tasksListeners) {
-			listener.DeleteTaskTriggered(task);
-		}
-	}
-
-	public void triggerCreateTask(Task task) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void triggerUpdateTask(Task task) {
-		// TODO Auto-generated method stub
-		
 	}
 }

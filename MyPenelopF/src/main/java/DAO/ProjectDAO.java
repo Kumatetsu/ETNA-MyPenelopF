@@ -9,7 +9,7 @@ import Observer.ProjectListener;
 import Observer.ProjectObserver;
 import classes.Contact;
 import classes.Group;
-import classes.Msg;
+import classes.Msgs;
 import classes.Project;
 import classes.Task;
 import utils.PenelopDevLogger;
@@ -103,14 +103,14 @@ public class ProjectDAO extends DAO<Project> implements ProjectDAOReceipe, Proje
 	}
 	
 	public Project getOneProject(String name) {
-		System.out.println("in get One Project" + name);
+		// System.out.println("in get One Project" + name);
 		ArrayList<Project> projects = this.get();
 		Project p = null;
 		for (Project project: projects) {
 			if (name.equals(project.getName()))
 				p = project;
 		}
-		System.out.println("p is " + p);
+		// System.out.println("p is " + p);
 		return p;
 	}
 
@@ -171,11 +171,11 @@ public class ProjectDAO extends DAO<Project> implements ProjectDAOReceipe, Proje
 	/**
 	 * Retrieve Project.messages from Project.mIds
 	 */
-	public ArrayList<Msg> getMsgs(Project p) {
-		ArrayList<Msg> msgs = this.di.readMsgs();
-		ArrayList<Msg> cMsgs = new ArrayList<Msg>();
+	public ArrayList<Msgs> getMsgs(Project p) {
+		ArrayList<Msgs> msgs = this.di.readMsgs();
+		ArrayList<Msgs> cMsgs = new ArrayList<Msgs>();
 		for (int iterator = 0; iterator < msgs.size(); iterator++) {
-			Msg m = msgs.get(iterator);
+			Msgs m = msgs.get(iterator);
 			List<Integer>ids = p.getMIds();
 			for (int it = 0; it < ids.size(); it++) {
 				if (ids.get(it) == m.getId()) {

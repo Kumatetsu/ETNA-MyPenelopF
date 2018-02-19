@@ -1,16 +1,16 @@
 package classes;
 
-public class Msg {
+public class Msgs {
 	// Properties
 	private Integer id;
 	private String content;
 	
 	// Constructors
-	public Msg() {}
-	public Msg (Integer id) {
+	public Msgs() {}
+	public Msgs (Integer id) {
 		this.id = id;
 	}
-	public Msg(Integer id, String content) {
+	public Msgs(Integer id, String content) {
 		this.id = id;
 		this.content = content;
 	}

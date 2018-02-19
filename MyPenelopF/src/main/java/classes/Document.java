@@ -6,11 +6,6 @@ public class Document {
 	
 	private String path;
 	
-	static private int autoincrement = 0;
-	static private int increment() {
-		return ++Document.autoincrement;
-	}
-	
 	// Object new Document constructor
 	public Document(String name, String path) {
 		this.name = name;

@@ -38,7 +38,7 @@ public class Group extends Item {
 		this.name = name;
 	}
 	//Surchaged complete constructor
-	public Group(String name, ArrayList<Contact> users, ArrayList<Project> projects, ArrayList<Msg> msgs) {
+	public Group(String name, ArrayList<Contact> users, ArrayList<Project> projects, ArrayList<Msgs> msgs) {
 		super(msgs);
 		this.id = Group.increment();
 		this.name = name;
@@ -46,7 +46,7 @@ public class Group extends Item {
 		this.projects = projects;
 	}
 	//Surchaged existing Group constructor
-	public Group(Integer id, String name, ArrayList<Contact> users, ArrayList<Project> projects, ArrayList<Msg> msgs) {
+	public Group(Integer id, String name, ArrayList<Contact> users, ArrayList<Project> projects, ArrayList<Msgs> msgs) {
 		super(msgs);
 		this.id = id;
 		this.name = name;

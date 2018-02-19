@@ -25,9 +25,9 @@ public class DocumentLooker implements Runnable {
 
 		for (File file : listOfFiles) {
 			if (file.isFile()) {
-				System.out.println("File " + file.getName());
+				// System.out.println("File " + file.getName());
 			} else if (file.isDirectory()) {
-				if (null == (currentP = this.pCtrl.getPDAO().getOneProject(file.getName())))
+				if (null == (currentP = this.pCtrl.getDAO().getOneProject(file.getName())))
 					createProjectFromDocuments(file, currentP);
 				else
 					inspectProjectDirectory(file, currentP);
@@ -48,8 +48,8 @@ public class DocumentLooker implements Runnable {
 		}
 
 		p.setDocuments(d);
-		this.pCtrl.getPDAO().add(p);
-		System.out.println("Project add");
+		this.pCtrl.getDAO().add(p);
+		// System.out.println("Project add");
 	}
 
 	private void inspectProjectDirectory(File folder, Project p) {
@@ -66,7 +66,7 @@ public class DocumentLooker implements Runnable {
 
 		pDocuments = p.getDocuments();
 
-		System.out.println("check if list is real");
+		// System.out.println("check if list is real");
 		try {
 		for (Map.Entry<String, String> entry : pDocuments.entrySet()) {
 			boolean exists = false;
@@ -77,24 +77,24 @@ public class DocumentLooker implements Runnable {
 				}
 			}
 			if (!exists) {
-				System.out.println("Delete because exists is false");
+				// System.out.println("Delete because exists is false");
 				Document d = new Document(entry.getKey(), entry.getValue());
-				System.out.println("doc created");
+				// System.out.println("doc created");
 				p.deleteDocument(d);
-				System.out.println("doc deletef from project");
+				// System.out.println("doc deletef from project");
 				modified = true;
 			}
-			System.out.println(entry.getValue());
+			// System.out.println(entry.getValue());
 		}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 		
-		System.out.println(modified);
+		// System.out.println(modified);
 
 		if (true == modified) {
-			System.out.println("update project");
-			this.pCtrl.getPDAO().update(p);
+			// System.out.println("update project");
+			this.pCtrl.getDAO().update(p);
 		}
 	}
 }

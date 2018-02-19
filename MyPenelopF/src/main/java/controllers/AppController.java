@@ -17,8 +17,12 @@ import ihm.dashboardPanel;
 import utils.DocumentLooker;
 import utils.PenelopDevLogger;
 
-public class AppController implements PenelopeController {
+public class AppController {
 	private static final PenelopDevLogger log = PenelopDevLogger.get();
+	private ContactController cCtrl;
+	private ProjectController pCtrl;
+	private GroupController gCtrl;
+	private TaskController tCtrl;
 	private HashMap<String, PenelopeController> ctrls = new HashMap<String, PenelopeController>();
 	private ContactDAO cDAO = null;
 	private ProjectDAO pDAO = null;
@@ -32,35 +36,28 @@ public class AppController implements PenelopeController {
 		this.pDAO = (ProjectDAO)DAOFactory.getProjectDAO(di);
 		this.gDAO = (GroupDAO)DAOFactory.getGroupDAO(di);
 		this.tDAO = (TaskDAO)DAOFactory.getTaskDAO(di);
-	}
-	
-	public void init() {
-		this.ctrls.put("group", new GroupController(this.gDAO));
-    		this.ctrls.put("contact", new ContactController(this.cDAO));
-    		this.ctrls.put("project", new ProjectController(this.pDAO));
-    		this.ctrls.put("task", new TaskController(this.tDAO));
-    		for (String key: this.ctrls.keySet())
-    			ctrls.get(key).init();
-    		this.initViews(ctrls);
-    		final DocumentLooker bigBrother = new DocumentLooker((ProjectController)ctrls.get("project"));
-    		final ScheduledFuture<?> beeperHandle =
-    			scheduler.scheduleAtFixedRate((Runnable)bigBrother, 5, 30, TimeUnit.SECONDS);
-    		log._("APP PENELOPE INITIALISED");
-	}
-	
-	private void initViews(HashMap<String, PenelopeController> ctrls) {
-		ContactController cCtrl = (ContactController)ctrls.get("contact");
-		ProjectController pCtrl = (ProjectController)ctrls.get("project");
-		GroupController gCtrl = (GroupController )ctrls.get("group");
-		TaskController tCtrl = (TaskController)ctrls.get("task");
-		if (this.Dashboard == null)
-			this.setBaseFrame(new BaseFrame(ctrls));
+		// controllers instaciation adding DAO
+		this.cCtrl = new ContactController(this.cDAO);
+		this.pCtrl = new ProjectController(this.pDAO);
+		this.gCtrl = new GroupController(this.gDAO);
+		this.tCtrl = new TaskController(this.tDAO);
+		this.ctrls.put("group", this.gCtrl);
+		this.ctrls.put("contact", this.cCtrl);
+		this.ctrls.put("project", this.pCtrl);
+		this.ctrls.put("task", this.tCtrl);
+		for (String key: this.ctrls.keySet())
+			this.ctrls.get(key).init();
+		this.setBaseFrame(new BaseFrame(ctrls));
 		if (this.viewIsInit()) {
-			cCtrl.setDashboard(this.getDashboard());
-			pCtrl.setDashboard(this.getDashboard());
-			gCtrl.setDashboard(this.getDashboard());
-			tCtrl.setDashboard(this.getDashboard());
+			this.cCtrl.setDashboard(this.getDashboard());
+			this.pCtrl.setDashboard(this.getDashboard());
+			this.gCtrl.setDashboard(this.getDashboard());
+			this.tCtrl.setDashboard(this.getDashboard());
 		}
+		final DocumentLooker bigBrother = new DocumentLooker((ProjectController)ctrls.get("project"));
+		final ScheduledFuture<?> beeperHandle =
+			scheduler.scheduleAtFixedRate((Runnable)bigBrother, 5, 30, TimeUnit.SECONDS);
+		log._("APP PENELOPE INITIALISED");
 	}
 	
 	public ContactDAO getContactDAO() {

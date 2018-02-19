@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import classes.Contact;
 import classes.Group;
-import classes.Msg;
+import classes.Msgs;
 import classes.Project;
 
 /**
@@ -35,11 +35,5 @@ public interface ContactDAOReceipe {
 	 * @param c
 	 * @return ArrayList<Msg>
 	 */
-	public ArrayList<Msg> getMsgs(Contact c);
-	/**
-	 *  Same as getGroups but for an ArrayList
-	 *  Build the content for each contact
-	 * @param contacts
-	 */
-	public void buildContactsGroups(ArrayList<Contact> contacts);
+	public ArrayList<Msgs> getMsgs(Contact c);
 }

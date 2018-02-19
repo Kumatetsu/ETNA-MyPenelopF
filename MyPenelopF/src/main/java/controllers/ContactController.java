@@ -19,7 +19,7 @@ import utils.PenelopDevLogger;
  * (interface CreateContactListener work with ihm.contact.CreateContact)
  * Calls on singletons.
  */
-public class ContactController implements PenelopeController, ContactListener {
+public class ContactController implements ContactListener, PenelopeController {
 	// Singletons calls on utilitarie classes
 	final static PenelopDevLogger log = PenelopDevLogger.get();
 	private ContactDAO cDAO = null;
@@ -30,12 +30,17 @@ public class ContactController implements PenelopeController, ContactListener {
 	public ContactController(ContactDAO cDAO) {
 		this.cDAO = cDAO;
 	}
+	// Constructor
+	public ContactController(ContactDAO cDAO, dashboardPanel dashboard) {
+		this.cDAO = cDAO;
+		this.dashboard = dashboard;
+	}
 	// Link DAO and Controller
 	public void init() {
-		cDAO.addContactListener(this);
+		this.cDAO.addContactListener(this);
 	}
 	// DAO accessor
-	final public ContactDAO getContactDAO() {
+	final public ContactDAO getDAO() {
 		return this.cDAO;
 	}
 	// Global View accessor
@@ -46,48 +51,12 @@ public class ContactController implements PenelopeController, ContactListener {
 	public void setDashboard(dashboardPanel dashboard) {
 		this.dashboard = dashboard;
 	}
-	
-	/**
-	 *  Observer pattern => ContactListener
-	 *  Interact with ihm.contact and ContactDAO
-	 *  ModelView linked by Observer pattern in controller
-	 */
-	public void CreateContactTriggered(Contact nContact) {
-    	log._("CREATE CONTACT");
-		log._(nContact);
-		this.cDAO.add(nContact);
-	}
-	
-	public void DeleteContactTriggered(Contact dContact) {
-    	log._("DELETE CONTACT");
-		log._(dContact);
-		this.cDAO.remove(dContact);
-	}
-
-	public void ShowUpdateTriggered(Contact c) {
-    	log._("SHOW UPDATE CONTACT WITH:");
-		log._(c);
-		this.uForm = new BaseFrame(this, c);
-	}
-	
-	public void UpdateContactTriggered(Contact uContact) {
-    	log._("CREATE CONTACT");
-		log._(uContact);
-		this.cDAO.update(uContact);
-	}
-	
 	public void ContactChangeTriggered() {
-		this.refreshContact();
-	}
-	
-	//
-	private void refreshContact() {
         ArrayList<Contact> retrievedContacts = this.cDAO.get();
-        log._("REFRESH CONTACT DISCONNECTED FROM DASHBOARD");
+        log._("REFRESH CONTACT");
         log.contacts(retrievedContacts);
         this.dashboard.displayContactPanel();
 	}
-	
 	public void testCtrl() {
 		log._("INIT ContactController");
 	}

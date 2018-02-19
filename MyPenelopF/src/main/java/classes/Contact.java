@@ -9,7 +9,6 @@ import DAO.ContactDAO;
 import DataInterface.FileSystemManager;
 import classes.Contact;
 import classes.Group;
-import classes.Msg;
 
 /**
  * @author aurelien
@@ -77,7 +76,7 @@ public class Contact extends Item {
 		// Logic to retrieve groups is in ContactDAO
 	}
 	// surcharged 'no-project' constructor
-	public Contact(String email, String surname, String name, ArrayList<Group> groups, ArrayList<Msg> messages) {
+	public Contact(String email, String surname, String name, ArrayList<Group> groups, ArrayList<Project> projects, ArrayList<Msgs> messages) {
 		super(messages);
 		Contact.autoincrement = this.lastId();
 		this.id = Contact.increment();
@@ -85,13 +84,13 @@ public class Contact extends Item {
 		this.surname = surname;
 		this.name = name;
 		this.setGroups(groups);
+		this.setProjects(projects);
 		this.setMessages(messages);
 	}
 	// surcharged 'full' constructor
-	public Contact(String email, String surname, String name, ArrayList<Project>projects, ArrayList<Group> groups, ArrayList<Msg> messages) {
+	public Contact(Integer id, String email, String surname, String name, ArrayList<Group> groups, ArrayList<Project>projects, ArrayList<Msgs> messages) {
 		super(messages);
-		Contact.autoincrement = this.lastId();
-		this.id = Contact.increment();
+		this.id = id;
 		this.email = email;
 		this.surname = surname;
 		this.name = name;
@@ -138,50 +137,51 @@ public class Contact extends Item {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public void linkProjects(ArrayList<Project> projects) {
-		for (Project project: projects) {
-			this.pIds.add(project.getId());
-		}
-	}
-	public void LinkGroups(ArrayList<Group> groups) {
-		for (Group group: groups) {
-			this.gIds.add(group.getId());
-		}
-	}
 	public void setGroups(ArrayList<Group> groups) {
 		this.groups = groups;
 		for (int iterator = 0; iterator < this.groups.size(); iterator++) {
-			this.gIds.add(this.groups.get(iterator).getId());
+			Integer id = this.groups.get(iterator).getId();
+			if (!this.gIds.contains(id))
+				this.gIds.add(id);
 		}
 	}
 	public void addGroup(Group g) {
 		if (!this.groups.contains(g)) {
 			this.groups.add(g);
-			this.gIds.add(g.getId());
+			if (!this.gIds.contains(g.getId()))
+				this.gIds.add(g.getId());
 		}
 	}
 	public void deleteGroup(Group g) {
 		if (this.groups.contains(g)) {
 			this.groups.remove(g);
-			this.gIds.remove(g.getId());
+			Integer id = g.getId();
+			if (this.gIds.contains(id))
+				this.gIds.remove(id);
 		}
 	}
 	public void setProjects(ArrayList<Project> projects) {
 		this.projects = projects;
 		for (int iterator = 0; iterator < this.projects.size(); iterator++) {
-			this.pIds.add(this.projects.get(iterator).getId());
+			Integer id = this.projects.get(iterator).getId();
+			if (!this.pIds.contains(id))
+				this.pIds.add(id);
 		}
 	}
 	public void addProject(Project p) {
 		if (!this.projects.contains(p)) {
 			this.projects.add(p);
-			this.pIds.add(p.getId());
+			Integer id = p.getId();
+			if (!this.pIds.contains(id))
+				this.pIds.add(id);
 		}
 	}
 	public void deleteProject(Project p) {
 		if (this.projects.contains(p)) {
 			this.projects.remove(p);
-			this.pIds.remove(p.getId());
+			Integer id = p.getId();
+			if (this.pIds.contains(id))
+				this.pIds.remove(id);
 		}
 	}
 }

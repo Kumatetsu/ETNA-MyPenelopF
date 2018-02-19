@@ -1,6 +1,6 @@
 package ihm;
 
-public interface ViewObserver {
+public interface PeneViewObserver {
 	void triggerShowContacts();
 	void triggerShowGroups();
 	void triggerShowProjects();

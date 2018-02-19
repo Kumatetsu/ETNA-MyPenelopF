@@ -42,18 +42,18 @@ public class PenelopDevLogger {
 		List<Integer> ids = g.getUIds();
 		for (int iterator = 0; iterator < ids.size(); iterator++) {
 			Integer id = ids.get(iterator);
-			System.out.println(id + "\n");
+			System.out.println("group identifier: " + id + "\n");
 		}
 	}
 
 	public void _(Project p) {
-		System.out.println("Group n°" + p.getId());
+		System.out.println("Project n°" + p.getId());
 		System.out.println("Name: " + p.getName());
 		System.out.println("Description: " + p.getDescription());
 		List<Integer> gIds = p.getGIds();
 		for (int iterator = 0; iterator < gIds.size(); iterator++) {
 			Integer id = gIds.get(iterator);
-			System.out.println(id + "\n");
+			System.out.println("Project associated to group n°" + id + "\n");
 		}
 	}
 

@@ -95,25 +95,4 @@ public class TaskDAO extends DAO<Task> implements TaskObserver, TaskDAOReceipe {
 			this.taskListeners.get(iterator).TaskChangeTriggered();
 		}
 	}
-	
-	public void triggerCreateTask(Task task) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void triggerUpdateTask(Task task) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void triggerDeleteTask(Task task) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void triggerShowUpdate(Task task) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

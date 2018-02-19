@@ -8,12 +8,18 @@ import ihm.dashboardPanel;
 import utils.PenelopDevLogger;
 
 public class TaskController implements PenelopeController, TaskListener {
-	// Singletons calls on utilitarie classes
+	/**
+	 * Logger
+	 */
 	final static PenelopDevLogger log = PenelopDevLogger.get();
+	/**
+	 * Data accessor 
+	 */
 	private TaskDAO tDAO = null;
-	// View elements
-	public dashboardPanel dashboard;
-	public BaseFrame uForm;
+	/**
+	 * Views
+	 */
+	private dashboardPanel dashboard;
 	
 	public TaskController(TaskDAO tDAO) {
 		this.tDAO = tDAO;
@@ -32,26 +38,18 @@ public class TaskController implements PenelopeController, TaskListener {
 	}
 	
 	public void ShowUpdateTriggered(Task t) {
-    	log._("SHOW UPDATE Project WITH:");
-		log._(t);
-		this.uForm = new BaseFrame(this, t);
+    	new BaseFrame(this, t);
 	}
 
 	public void DeleteTaskTriggered(Task dTask) {
-		log._("Delete Task triggered");
-		log._(dTask);
 		this.tDAO.remove(dTask);
 	}
 
 	public void CreateTaskTriggered(Task nTask) {
-		log._("Create Task triggered");
-		log._(nTask);
 		this.tDAO.add(nTask);
 	}
 
 	public void UpdateTaskTriggered(Task uTask) {
-		log._("Update Task triggered");
-		log._(uTask);
 		this.tDAO.update(uTask);
 	}
 
@@ -70,5 +68,4 @@ public class TaskController implements PenelopeController, TaskListener {
 	public dashboardPanel getDashboard() {
 		return this.dashboard;
 	}
-
 }

@@ -32,9 +32,15 @@ public class Task {
 	public Task(Integer id, String description, Project project) {
 		this.id = id;
 		this.description = description;
-		this.setProject(project);
+		if (project != null && project.getId() > 0)
+			this.setProject(project);
 	}
-	
+
+	@Override
+	public String toString() {
+	    return this.description;
+	}
+
 	// Accessors 
 	public Integer getId() {
 		return this.id;

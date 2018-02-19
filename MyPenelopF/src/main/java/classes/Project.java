@@ -74,12 +74,25 @@ public class Project extends Item {
 		this.description = description;
 	}
 
-	public Project(String name, String description, ArrayList<Task> tasks) {
+	public Project(String name, String description, ArrayList<Group> groups, ArrayList<Contact>contacts, ArrayList<Task> tasks) {
+		Project.autoincrement = this.lastId();
+		this.id = Project.increment();
 		this.name = name;
 		this.description = description;
-		this.tasks = tasks;
+		this.setTasks(tasks);
+		this.setGroups(groups);
+		this.setContacts(contacts);		
 	}
 
+	public Project(Integer id, String name, String description, ArrayList<Group> groups, ArrayList<Contact>contacts, ArrayList<Task> tasks) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.setTasks(tasks);
+		this.setGroups(groups);
+		this.setContacts(contacts);		
+	}
+	
 	public Integer getId() {
 		return this.id;
 	}
@@ -152,13 +165,16 @@ public class Project extends Item {
 	public void setContacts(ArrayList<Contact> users) {
 		this.users = users;
 		for (int iterator = 0; iterator < this.users.size(); iterator++) {
-			this.uIds.add(this.users.get(iterator).getId());
+			Integer id = this.users.get(iterator).getId();
+			if (!this.uIds.contains(id))
+				this.uIds.add(id);
 		}
 	}
 
 	public void addContact(Contact c) {
 		if (!this.users.contains(c)) {
 			this.users.add(c);
+		if (!this.uIds.contains(c.getId()))
 			this.uIds.add(c.getId());
 		}
 	}
@@ -166,6 +182,7 @@ public class Project extends Item {
 	public void deleteContact(Contact c) {
 		if (this.users.contains(c)) {
 			this.users.remove(c);
+		if (this.uIds.contains(c.getId()))
 			this.uIds.remove(c.getId());
 		}
 	}
@@ -193,13 +210,16 @@ public class Project extends Item {
 	public void setTasks(ArrayList<Task> tasks) {
 		this.tasks = tasks;
 		for (int iterator = 0; iterator < this.tasks.size(); iterator++) {
-			this.tIds.add(this.tasks.get(iterator).getId());
+			Integer id = this.tasks.get(iterator).getId();
+			if (!this.tIds.contains(id))
+				this.tIds.add(id);
 		}
 	}
 
 	public void addTask(Task t) {
 		if (!this.tasks.contains(t)) {
 			this.tasks.add(t);
+		if (!this.tIds.contains(t.getId()))
 			this.tIds.add(t.getId());
 		}
 	}
@@ -207,6 +227,8 @@ public class Project extends Item {
 	public void deleteTask(Task task) {
 		if (this.tasks.contains(task)) {
 			this.tasks.remove(task);
+		if (this.tIds.contains(task.getId()))
+			this.tIds.remove(task.getId());
 		}
 	}
 

@@ -9,7 +9,7 @@ import java.util.Collection;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class menuPanel extends JPanel implements ViewObserver {
+public class menuPanel extends JPanel implements PeneViewObserver {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -19,7 +19,7 @@ public class menuPanel extends JPanel implements ViewObserver {
 	private JButton pButton;
 	private JButton tButton;
 	
-	private final Collection<ViewListener> ViewListeners = new ArrayList<ViewListener>();
+	private final Collection<PeneViewListener> ViewListeners = new ArrayList<PeneViewListener>();
 	
 	public menuPanel() {
 		final menuPanel self = this;
@@ -59,33 +59,33 @@ public class menuPanel extends JPanel implements ViewObserver {
 		return this.mPan;
 	}
 	
-	public void addViewListener(ViewListener listener) {
+	public void addViewListener(PeneViewListener listener) {
 		this.ViewListeners.add(listener);
 	}
-	public void removeViewListener(ViewListener listener) {
+	public void removeViewListener(PeneViewListener listener) {
 		this.ViewListeners.remove(listener);
 	}
 
 	public void triggerShowContacts() {
-		for (ViewListener listener: this.ViewListeners) {
+		for (PeneViewListener listener: this.ViewListeners) {
 			listener.showContactsTriggered();
 		}
 	}
 
 	public void triggerShowGroups() {
-		for (ViewListener listener: this.ViewListeners) {
+		for (PeneViewListener listener: this.ViewListeners) {
 			listener.showGroupsTriggered();
 		}
 	}
 
 	public void triggerShowProjects() {
-		for (ViewListener listener: this.ViewListeners) {
+		for (PeneViewListener listener: this.ViewListeners) {
 			listener.showProjectsTriggered();
 		}
 	}
 
 	public void triggerShowTasks() {
-		for (ViewListener listener: this.ViewListeners) {
+		for (PeneViewListener listener: this.ViewListeners) {
 			listener.showTasksTriggered();
 		}
 	}

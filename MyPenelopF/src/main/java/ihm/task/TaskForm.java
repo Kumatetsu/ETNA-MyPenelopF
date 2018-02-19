@@ -3,52 +3,51 @@ package ihm.task;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import Observer.TaskListener;
-import Observer.TaskObserver;
+import classes.Project;
 import classes.Task;
-import ihm.FormBuilder;
+import controllers.TaskController;
+import ihm.ViewBuilder;
 
-public class TaskForm extends JPanel implements TaskObserver {
+public class TaskForm extends JPanel {
 
 	/**
 	 * JPanel requirement
 	 */
 	private static final long serialVersionUID = -7385022145032316437L;
-	private FormBuilder _fb = new FormBuilder();
+	private ViewBuilder _vb = new ViewBuilder();
 	private JPanel pan;
 	private JLabel title = new JLabel("Create New Task");
 	private JButton createButton = new JButton("Create");
 	private JButton updateButton = new JButton("Update");
-	private JPanel description = this._fb.getTextField("Content Description");
-	private final Collection<TaskListener> tasksListeners = new ArrayList<TaskListener>();
-	public TaskForm(JPanel pan) {
+	private JPanel description = this._vb.getTextField("Content Description");
+	
+	public TaskForm(JPanel pan, final TaskController tCtrl) {
 		GridLayout gl = new GridLayout(5, 1, 5, 5);
 		this.pan = pan;
 		this.pan.setLayout(gl);
 		this.pan.add(this.title);
 		this.pan.add(this.description);
 		final TaskForm self = this;
+		this.createButton.setPreferredSize(this._vb.getButtonSize());
 		this.createButton.addActionListener(new ActionListener() {
 	     	public void actionPerformed(ActionEvent event) {
 	     		Task t = new Task(
 	     					self.getDescriptionInput().getText()
 	     				);
-	     		self.triggerCreateTask(t);
+	     		tCtrl.getDAO().add(t);
 	     	}
 		});
 		this.pan.add(this.createButton);
 
 	}
 
-	public TaskForm(JPanel pan, Task task) {
+	public TaskForm(JPanel pan, final TaskController tCtrl, Task task) {
 		GridLayout gl = new GridLayout(5, 1, 5, 5);
 		this.pan = pan;
 		this.pan.setLayout(gl);
@@ -58,13 +57,16 @@ public class TaskForm extends JPanel implements TaskObserver {
 		this.getDescriptionInput().setText(task.getDescription());
 		final TaskForm self = this;
 		final Integer id = task.getId();
+		final Project project = task.getProject();
+		this.updateButton.setPreferredSize(this._vb.getButtonSize());
 		this.updateButton.addActionListener(new ActionListener() {
 	     	public void actionPerformed(ActionEvent event) {
 	     		Task t = new Task(
 	     					id,
-	     					self.getDescriptionInput().getText()
+	     					self.getDescriptionInput().getText(),
+	     					project
 	     				);
-	     		self.triggerUpdateTask(t);
+	     		tCtrl.getDAO().update(t);
 	     	}
 		});
 		this.pan.add(this.updateButton);
@@ -77,41 +79,4 @@ public class TaskForm extends JPanel implements TaskObserver {
 	public JPanel getPan() {
 		return this.pan;
 	}
-
-	public void addTaskListener(TaskListener listener) {
-		if (!this.tasksListeners.contains(listener)) {
-			this.tasksListeners.add(listener);
-		}
-	}
-
-	public void removeTaskListener(TaskListener listener) {
-		if (this.tasksListeners.contains(listener)) {
-			this.tasksListeners.remove(listener);
-		}
-	}
-
-	public void triggerCreateTask(Task task) {
-		for (TaskListener listener: this.tasksListeners) {
-			listener.CreateTaskTriggered(task);
-		}
-	}
-
-	public void triggerUpdateTask(Task task) {
-		for (TaskListener listener: this.tasksListeners) {
-			listener.UpdateTaskTriggered(task);
-		}
-	}
-
-	public void triggerDeleteTask(Task task) {
-		// TODO Auto-generated method stub
-	}
-
-	public void triggerTaskChange() {
-		// TODO Auto-generated method stub
-	}
-
-	public void triggerShowUpdate(Task task) {
-		// TODO Auto-generated method stub
-	}
-
 }

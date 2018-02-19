@@ -3,13 +3,9 @@ package ihm.group;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -18,48 +14,47 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import Observer.ContactListener;
-import Observer.GroupListener;
-import Observer.GroupObserver;
 import classes.Contact;
 import classes.Group;
 import classes.Project;
 import controllers.ContactController;
 import controllers.GroupController;
 import controllers.ProjectController;
-import ihm.FormBuilder;
-import ihm.contact.ContactForm;
+import ihm.ViewBuilder;
 
-public class FormGroup extends JPanel implements GroupObserver{
+public class GroupForm extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
-	private FormBuilder _fb = new FormBuilder();
+	private ViewBuilder _vb = new ViewBuilder();
 	private JPanel pan;
 	private JLabel title = new JLabel("Create New Group");
 	private JButton submit = new JButton("Create");
-	private JPanel name = this._fb.getTextField("Name");
+	private JPanel name = this._vb.getTextField("Name");
 	private JButton updateButton = new JButton("Update");
-	private JList pList = null;
-	private JList uList = null;
-	private final Collection<GroupListener> formGroupListeners = new ArrayList<GroupListener>();
+	private JList<?> pList = null;
+	private JList<?> cList = null;
 	
-	public FormGroup(JPanel pan, GroupController gCtrl, ProjectController pCtrl, ContactController cCtrl ) {
-		ArrayList<Project> p = pCtrl.getPDAO().get();
-		ArrayList<Contact> c = cCtrl.getContactDAO().get();
+	public GroupForm(JPanel pan,
+				     final GroupController gCtrl,
+				     ProjectController pCtrl,
+				     ContactController cCtrl
+				    ) {
+		ArrayList<Project> p = pCtrl.getDAO().get();
+		ArrayList<Contact> c = cCtrl.getDAO().get();
 		this.pList = new JList(p.toArray());
-		this.uList = new JList(c.toArray());
+		this.cList = new JList(c.toArray());
 		this.pList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		this.uList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		this.cList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		this.pList.setVisibleRowCount(3);
-		this.uList.setVisibleRowCount(3);
+		this.cList.setVisibleRowCount(3);
 		GridLayout gl = new GridLayout(7, 4, 5, 5);
 		this.pan = pan;
 		this.pan.setLayout(gl);
 		this.pan.add(this.title);
 		this.pan.add(this.name);
 		this.pan.add(new JScrollPane(this.pList));
-		this.pan.add(new JScrollPane(this.uList));
-		final FormGroup self = this;
+		this.pan.add(new JScrollPane(this.cList));
+		final GroupForm self = this;
 		this.submit.addActionListener(new ActionListener() {
 	     	public void actionPerformed(ActionEvent event) {
 	     		Group g = new Group(self.getNameInput().getText());
@@ -72,13 +67,13 @@ public class FormGroup extends JPanel implements GroupObserver{
 	     		if (!users.isEmpty()) {
 	     			g.linkUsers(users);
 	     		}
-	     		self.triggerCreateGroup(g);
+	     		gCtrl.getDAO().add(g);
 	     	}
 		});
 		this.pan.add(this.submit);
 	}
 	
-	public FormGroup(JPanel jPanel, Group group) {
+	public GroupForm(JPanel jPanel, final GroupController gCtrl, Group group) {
 		GridLayout gl = new GridLayout(5, 1, 5, 5);
 		this.pan = jPanel;
 		this.pan.setLayout(gl);
@@ -86,15 +81,16 @@ public class FormGroup extends JPanel implements GroupObserver{
 		this.pan.add(this.title);
 		this.getNameInput().setText(group.getName());
 		this.pan.add(this.name);
-		final FormGroup self = this;
+		final GroupForm self = this;
 		final int id = group.getId();
+		this.updateButton.setPreferredSize(this._vb.getButtonSize());
 		this.updateButton.addActionListener(new ActionListener() {
 	     	public void actionPerformed(ActionEvent event) {
 	    		final Group g = new Group(
 	    					id,
 	    					self.getNameInput().getText()
 	    				);
-	     		self.triggerUpdateGroup(g);
+	    		gCtrl.getDAO().update(g);
 	     	}
 		});
 		this.pan.add(this.updateButton);
@@ -109,71 +105,23 @@ public class FormGroup extends JPanel implements GroupObserver{
 	public JButton getSubmit() {
 		return this.submit;
 	}
-	// Observer subscribe, unsubscribe and notify
-	public void addGroupListener(GroupListener listener) {
-		this.formGroupListeners.add(listener);
-	}
-	public void removeFormGroupListener(GroupListener listener) {
-		this.formGroupListeners.remove(listener);
-	}
-	
 	public JTextField getNameInput() {
 		return (JTextField)this.name.getComponent(1);
 	}
 	
 	ArrayList<Project> getProjectsFromList() {
-		Object[] projects =  this.pList.getSelectedValues();
+		List<?> projects =  this.pList.getSelectedValuesList();
 		ArrayList<Project> aProjects = new ArrayList<Project>();
-		for (Object project: projects) {
-			Project newProject = (Project)project;
-			System.out.println(newProject.getName());
-			aProjects.add(newProject);
-		}
+		for (Object project: projects) 
+			aProjects.add((Project)project);
 		return aProjects;
 	}
 	
 	ArrayList<Contact> getUsersFromList() {
-		Object[] users =  this.uList.getSelectedValues();
+		List<?> contacts =  this.cList.getSelectedValuesList();
 		ArrayList<Contact> aUsers = new ArrayList<Contact>();
-		for (Object user: users) {
-			Contact newUser = (Contact)user;
-			System.out.println(newUser.getName());
-			aUsers.add(newUser);
-		}
+		for (Object contact: contacts)
+			aUsers.add((Contact)contact);
 		return aUsers;
-	}
-	
-	public void triggerCreateGroup(Group group) {
-		System.out.println("trigger the create Group !");
-		for (GroupListener listener: this.formGroupListeners) {
-			listener.CreateGroupTriggered(group);
-		}
-	}
-
-	public void removeGroupListener(GroupListener listener) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void triggerGroupChange() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void triggerUpdateGroup(Group group) {
-		System.out.println("UPDATE Group");
-		for (GroupListener listener: this.formGroupListeners) {
-			listener.UpdateGroupTriggered(group);
-		}
-	}
-
-	public void triggerDeleteGroup(Group group) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void triggerShowUpdate(Group group) {
-		// TODO Auto-generated method stub
-		
 	}
 }

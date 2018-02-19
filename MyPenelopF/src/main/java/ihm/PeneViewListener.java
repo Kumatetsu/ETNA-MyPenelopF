@@ -1,6 +1,6 @@
 package ihm;
 
-public interface ViewListener {
+public interface PeneViewListener {
 	void showProjectsTriggered();
 	void showContactsTriggered();
 	void showGroupsTriggered();

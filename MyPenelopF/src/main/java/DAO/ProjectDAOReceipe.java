@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import classes.Contact;
 import classes.Group;
-import classes.Msg;
+import classes.Msgs;
 import classes.Project;
 import classes.Task;
 
@@ -35,5 +35,5 @@ public interface ProjectDAOReceipe {
 	 * @param p
 	 * @return ArrayList<Msg>
 	 */
-	public ArrayList<Msg> getMsgs(Project p);
+	public ArrayList<Msgs> getMsgs(Project p);
 }
