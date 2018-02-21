@@ -76,7 +76,7 @@ public class ContactPanel extends JPanel {
 	    	JPanel gridPan = new JPanel();
 	    	JPanel card = new JPanel();
 	        JPanel userPan = new JPanel();
-			GridLayout gl = new GridLayout(1, 3, 5, 5);
+			GridLayout gl = new GridLayout(2, 3, 5, 5);
 			gridPan.setLayout(gl);
 			// groupPanel definition
 	    	ArrayList<Group> userGroups = user.getGroups();
@@ -172,8 +172,8 @@ public class ContactPanel extends JPanel {
 	 */
 	private JPanel buildContactDisplay(Contact c) {
 		JPanel contactPanel = new JPanel();
-		contactPanel.setLayout(new GridLayout(3, 2, 2, 2));
-		contactPanel.setSize(new Dimension(300, 300));
+		contactPanel.setLayout(new GridLayout(8, 2, 2, 2));
+		contactPanel.setSize(new Dimension(500, 500));
 		contactPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		JLabel nameLab = new JLabel("Name: ");
 		JLabel name = new JLabel(c.getName());
