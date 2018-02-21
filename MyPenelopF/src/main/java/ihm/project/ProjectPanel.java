@@ -86,7 +86,7 @@ public class ProjectPanel extends JPanel {
 			// Card and Panel init + layout
 			JPanel card = new JPanel();
 			JPanel projectPan = new JPanel();
-			projectPan.setLayout(new GridLayout(1, 8, 2, 2));
+			projectPan.setLayout(new GridLayout(2, 8, 2, 2));
 			// project content
 			projectPan.add(this.displayProject(project));
 			if (edit) {
@@ -146,8 +146,17 @@ public class ProjectPanel extends JPanel {
     					new BaseFrame(pCtrl, project);
 					}
 				});
+				JButton msg = new JButton("add msg");
+				msg.setPreferredSize(this._vb.getButtonSize());
+				msg.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+    						System.out.println("ProjectPanel: try to add msg");
+					}
+				});
+				btnPanel.setLayout(new GridLayout(3,1));
 				btnPanel.add(up);
 				btnPanel.add(del);
+				btnPanel.add(msg);
 			    projectPan.add(this.groupPan.getRootPan());
 			    projectPan.add(this.taskPan.getRootPan());
 			    projectPan.add(this.contactPan.getRootPan());

@@ -98,8 +98,17 @@ public class GroupPanel extends JPanel {
     					new BaseFrame(gCtrl, group);
     				}
     			});
+    			JButton msg = new JButton("add msg");
+    			msg.setPreferredSize(this._vb.getButtonSize());
+    			msg.addActionListener(new ActionListener() {
+    				public void actionPerformed(ActionEvent event) {
+    					System.out.println("add msg in group");
+    				}
+    			});
+    		 	btnPanel.setLayout(new GridLayout(3,1));
     			btnPanel.add(up);
     			btnPanel.add(del);
+    			btnPanel.add(msg);
         		card.add(this.contactPan.getRootPan());
     			card.add(btnPanel);
     		}
@@ -130,8 +139,8 @@ public class GroupPanel extends JPanel {
 	 */
 	private JPanel getDisplayGroup(Group g) {
 		JPanel groupPanel = new JPanel();
-		groupPanel.setLayout(new GridLayout(2, 2, 2, 2));
-		groupPanel.setSize(new Dimension(300, 300));
+		groupPanel.setLayout(new GridLayout(6, 2, 2, 2));
+		groupPanel.setSize(new Dimension(500, 500));
 		groupPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		JLabel idLab = new JLabel("Group n°: ");
 		JLabel id = new JLabel(g.getId().toString());

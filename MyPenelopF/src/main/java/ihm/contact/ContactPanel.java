@@ -132,8 +132,17 @@ public class ContactPanel extends JPanel {
 	        			new BaseFrame(cCtrl, user);
 	        		}
 	        	});
+	        	JButton msg = new JButton("add msg");
+	        	msg.setPreferredSize(this._vb.getButtonSize());
+	        	msg.addActionListener(new ActionListener() {
+	        		public void actionPerformed(ActionEvent event) {
+	        			System.out.println("click on add message on Contact");
+	        		}
+	        	});
+	        	boutonPane.setLayout(new GridLayout(3,1));
 	        	boutonPane.add(up);
 	        	boutonPane.add(del);
+	        	boutonPane.add(msg);
 	        	userPan.add(boutonPane);
 	        }
         	gridPan.add(userPan);
