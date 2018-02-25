@@ -9,6 +9,8 @@ import Observer.GroupListener;
 import Observer.GroupObserver;
 import classes.Contact;
 import classes.Group;
+import classes.Msgs;
+import classes.Project;
 
 public class GroupDAO extends DAO<Group> implements GroupDAOReceipe, GroupObserver {
 
@@ -91,6 +93,8 @@ public class GroupDAO extends DAO<Group> implements GroupDAOReceipe, GroupObserv
 			for (int iterator = 0; iterator < groups.size(); iterator++) {
 				Group g = groups.get(iterator);
 				g.setUsers(this.getContacts(g));
+				g.setProjects(this.getProjects(g));
+				g.setMessages(this.getMsgs(g));
 			}
 			return groups;
 		}
@@ -108,6 +112,42 @@ public class GroupDAO extends DAO<Group> implements GroupDAOReceipe, GroupObserv
 				}
 			}
 			return gContacts;
+		}
+		
+		/**
+		 * Retrieve Group.projects from Group.pIds
+		 */
+		public ArrayList<Project> getProjects(Group g) {
+			ArrayList<Project> projects = this.di.readProjects();
+			ArrayList<Project> gProjects = new ArrayList<Project>();
+			for (int iterator = 0; iterator < projects.size(); iterator++) {
+				Project p = projects.get(iterator);
+				List<Integer> ids = g.getPIds();
+				for (int it = 0; it < ids.size(); it++) {
+					if (ids.get(it) == p.getId()) {
+						gProjects.add(p);
+					}
+				}
+			}
+			return gProjects;
+		}
+		
+		/**
+		 * Retrieve Group.messages from Group.mIds
+		 */
+		public ArrayList<Msgs> getMsgs(Group g) {
+			ArrayList<Msgs> msgs = this.di.readMsgs();
+			ArrayList<Msgs> gMsgs = new ArrayList<Msgs>();
+			for (int iterator = 0; iterator < msgs.size(); iterator++) {
+				Msgs m = msgs.get(iterator);
+				List<Integer> ids = g.getMIds();
+				for (int it = 0; it < ids.size(); it++) {
+					if (ids.get(it) == m.getId()) {
+						gMsgs.add(m);
+					}
+				}
+			}
+			return gMsgs;
 		}
 
 		public void triggerGroupChange() {

@@ -19,9 +19,6 @@ public class Group extends Item {
 
 	private transient ArrayList<Project> projects = new ArrayList<Project>();
 	private List<Integer>pIds = new ArrayList<Integer>();
-	
-	private transient ArrayList<Msgs> messages = new ArrayList<Msgs>();
-	private ArrayList<Integer> msgIds = new ArrayList<Integer>();
 
 	// Database auto-increment id simulation, must be enhanced by a "retrieveLastId" method
 	static private int autoincrement = 0;
@@ -145,15 +142,6 @@ public class Group extends Item {
 		if (this.projects.contains(project)) {
 			this.projects.remove(project);
 			this.pIds.remove(project.getId());
-		}
-	}
-	
-	public void addMsgs(Msgs m) {
-		if (!this.messages.contains(m)) {
-			this.messages.add(m);
-			Integer id = m.getId();
-			if (!this.msgIds.contains(id))
-				this.msgIds.add(id);
 		}
 	}
 }

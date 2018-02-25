@@ -110,7 +110,7 @@ public class MsgPopUp {
 	     		Msgs message = new Msgs(tf.getText());
 	     		mDAO.add(message);
 	     		System.out.println("message add in messageContact");
-	     		c.addMsgs(message);
+	     		c.addMessage(message);
 	     		cDAO.update(c);
 	     		frame.dispose();
 	     	}
@@ -129,7 +129,7 @@ public class MsgPopUp {
 	     		Msgs message = new Msgs(tf.getText());
 	     		mDAO.add(message);
 	     		System.out.println("message add in messageGroup");
-	     		g.addMsgs(message);
+	     		g.addMessage(message);
 	     		gDAO.update(g);
 	     		frame.dispose();
 	     	}
@@ -152,7 +152,7 @@ public class MsgPopUp {
 		     		Msgs message = new Msgs(tf.getText());
 		     		mDAO.add(message);
 		     		System.out.println("message add in messageGroup");
-		     		p.addMsgs(message);
+		     		p.addMessage(message);
 		     		pDAO.update(p);
 		     		frame.dispose();
 	     	}
