@@ -10,6 +10,10 @@ public class Msgs {
 	private Integer id;
 	private String content;
 	
+	static private int autoincrement = 0;
+	static private int increment() {
+		return ++Msgs.autoincrement;
+	}
 	private int lastId() {
 		ArrayList<Msgs> messages = MsgsDAO.getInstance(FileSystemManager.get()).get();
 		int id = 0;
@@ -17,7 +21,7 @@ public class Msgs {
 			for (int iterator = 0; iterator < messages.size(); iterator++) {
 				Msgs m = messages.get(iterator);
 				if (m.getId() > id)
-					id = m.getId();
+					id = m.getId() + 1;
 				}
 		}
 		return id;
@@ -27,7 +31,8 @@ public class Msgs {
 	public Msgs() {}
 
 	public Msgs(String content) {
-		this.id = lastId();
+		Msgs.autoincrement = this.lastId();
+		this.id = Msgs.increment();
 		this.content = content;
 	}
 	

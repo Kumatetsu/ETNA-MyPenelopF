@@ -10,9 +10,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 import classes.Contact;
 import classes.Group;
 import classes.Msgs;
@@ -79,7 +83,7 @@ public class ContactPanel extends JPanel {
 	    	JPanel gridPan = new JPanel();
 	    	JPanel card = new JPanel();
 	        JPanel userPan = new JPanel();
-			GridLayout gl = new GridLayout(2, 3, 5, 5);
+			GridLayout gl = new GridLayout(2, 2, 5, 5);
 			gridPan.setLayout(gl);
 			// groupPanel definition
 	    	ArrayList<Group> userGroups = user.getGroups();
@@ -110,16 +114,12 @@ public class ContactPanel extends JPanel {
 	        
 	        // related messages
 	        ArrayList<Msgs> messages = user.getMessages();
-	    	JPanel compiledMsgs = new JPanel();
-	    	if (messages.size() > 0) {
-	    		compiledMsgs.add(new JLabel("Message: "));
-	    	}
+	    	DefaultListModel<String> model = new DefaultListModel<String>();
+	    	JList list = new JList(model);
 	    	for (int iterator = 0; iterator < messages.size(); iterator++) {
-	    		compiledMsgs.add(new JLabel(messages.get(iterator).getContent()));
+	    		model.addElement(messages.get(iterator).getContent());
 	    	}
 	    	userPan.add(contactCard);
-	    	
-	    	//userPan.add(compiledMsgs);
 	        // Delete and Update rely on listeners
 	        if (edit) {
 		        JPanel boutonPane = this._vb.getTwoBtnPanel();
@@ -151,12 +151,14 @@ public class ContactPanel extends JPanel {
 	        	boutonPane.add(msg);
 	        	userPan.add(boutonPane);
 	        }
+		JScrollPane scrollableList = new JScrollPane(list);
         	gridPan.add(userPan);
         	gridPan.add(groupPan.getRootPan());
         	gridPan.add(projectPan.getRootPan());
-	     	card.add(gridPan);
-	        this.contactCards.add(card, user.getId().toString());
-	    }
+        	gridPan.add(scrollableList);
+	    card.add(gridPan);
+	    this.contactCards.add(card, user.getId().toString());
+	   }
 	    this.pan.add(this.navigation, BorderLayout.PAGE_START);
 	    this.pan.add(this.contactCards, BorderLayout.CENTER);
 	}
