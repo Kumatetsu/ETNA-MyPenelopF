@@ -10,11 +10,15 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import classes.Group;
+import classes.Msgs;
 import controllers.ContactController;
 import controllers.GroupController;
 import controllers.MsgsController;
@@ -74,6 +78,13 @@ public class GroupPanel extends JPanel {
 	    for (final Group group: groups) {
     		JPanel card = new JPanel();
     		JPanel groupCard = this.getDisplayGroup(group);
+    		ArrayList<Msgs> messages = group.getMessages();
+    		DefaultListModel<String> model = new DefaultListModel<String>();
+    		JList list = new JList(model);
+    		for (int iterator = 0; iterator < messages.size(); iterator++) {
+    			model.addElement(messages.get(iterator).getContent());
+    		}
+    		JScrollPane scrollableList = new JScrollPane(list);
     		log._("GroupPanel constructor: ");
     		log.contacts(group.getUsers());
     		if (edit) {
@@ -88,6 +99,7 @@ public class GroupPanel extends JPanel {
 						   						    false
 							  					   );
     			JPanel btnPanel = this._vb.getTwoBtnPanel();
+    			
     			JButton del = new JButton("Delete");
     			del.setPreferredSize(this._vb.getButtonSize());
     			del.addActionListener(new ActionListener() {
@@ -118,6 +130,7 @@ public class GroupPanel extends JPanel {
     			card.add(btnPanel);
     		}
     		card.add(groupCard);
+    		card.add(scrollableList);
     		this.groupCards.add(card, group.getId().toString());
 	    }
 	    this.pan.add(this.navigation, BorderLayout.PAGE_START);
