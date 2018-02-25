@@ -19,9 +19,11 @@ import classes.Msgs;
 import classes.Project;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.ProjectController;
 import controllers.TaskController;
 import ihm.BaseFrame;
+import ihm.MsgPopUp;
 import ihm.ViewBuilder;
 import ihm.group.GroupPanel;
 import ihm.project.ProjectPanel;
@@ -57,6 +59,7 @@ public class ContactPanel extends JPanel {
 						GroupController gCtrl,
 						ProjectController pCtrl,
 						TaskController tCtrl,
+						final MsgsController mCtrl,
 						CardLayout cl, 
 						ArrayList<Contact> users,
 						boolean edit
@@ -85,6 +88,7 @@ public class ContactPanel extends JPanel {
 	    								   cCtrl,
 	    								   pCtrl,
 	    								   tCtrl,
+	    								   mCtrl,
 	    								   new CardLayout(),
 	    								   userGroups,
 	    								   false
@@ -96,6 +100,7 @@ public class ContactPanel extends JPanel {
 	    									   cCtrl,
 	    									   gCtrl,
 	    									   tCtrl,
+	    									   mCtrl,
 	    									   new CardLayout(),
 	    									   userProjects,
 	    									   false
@@ -136,7 +141,8 @@ public class ContactPanel extends JPanel {
 	        	msg.setPreferredSize(this._vb.getButtonSize());
 	        	msg.addActionListener(new ActionListener() {
 	        		public void actionPerformed(ActionEvent event) {
-	        			System.out.println("click on add message on Contact");
+	        			System.out.println("in contractPanel add msg");
+	        			new MsgPopUp(cCtrl, user, mCtrl);
 	        		}
 	        	});
 	        	boutonPane.setLayout(new GridLayout(3,1));

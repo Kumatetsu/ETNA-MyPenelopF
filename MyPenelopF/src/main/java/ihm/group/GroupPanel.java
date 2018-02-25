@@ -17,9 +17,11 @@ import javax.swing.JPanel;
 import classes.Group;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.ProjectController;
 import controllers.TaskController;
 import ihm.BaseFrame;
+import ihm.MsgPopUp;
 import ihm.ViewBuilder;
 import ihm.contact.ContactPanel;
 import utils.PenelopDevLogger;
@@ -55,6 +57,7 @@ public class GroupPanel extends JPanel {
 					  ContactController cCtrl,
 					  ProjectController pCtrl,
 					  TaskController tCtrl,
+					  final MsgsController mCtrl,
 					  CardLayout cl,
 					  ArrayList<Group> groups,
 					  Boolean edit
@@ -79,6 +82,7 @@ public class GroupPanel extends JPanel {
 						   						    gCtrl,
 						   						    pCtrl,
 						   						    tCtrl,
+						   						    mCtrl,
 						   						    new CardLayout(),
 						   						    group.getUsers(),
 						   						    false
@@ -103,6 +107,7 @@ public class GroupPanel extends JPanel {
     			msg.addActionListener(new ActionListener() {
     				public void actionPerformed(ActionEvent event) {
     					System.out.println("add msg in group");
+    					new MsgPopUp(gCtrl, group, mCtrl);
     				}
     			});
     		 	btnPanel.setLayout(new GridLayout(3,1));

@@ -3,6 +3,7 @@ package DAO;
 import DataInterface.DataInterface;
 import classes.Contact;
 import classes.Group;
+import classes.Msgs;
 import classes.Project;
 import classes.Task;
 
@@ -35,5 +36,9 @@ public class DAOFactory {
 		  // ProjectDAO must implement ProjectDAOReceipe
 		  TaskDAOReceipe tDAO = new TaskDAO(di);
 		  return (TaskDAO)tDAO;
+	  }
+	  public static DAO<Msgs> getMsgsDAO(DataInterface di) {
+		  MsgsDAOReceipe mDAO = new MsgsDAO(di);
+		  return (MsgsDAO)mDAO;
 	  }
 }

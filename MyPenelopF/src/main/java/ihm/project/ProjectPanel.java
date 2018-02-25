@@ -21,9 +21,11 @@ import classes.Project;
 import classes.Task;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.ProjectController;
 import controllers.TaskController;
 import ihm.BaseFrame;
+import ihm.MsgPopUp;
 import ihm.ViewBuilder;
 import ihm.contact.ContactPanel;
 import ihm.group.GroupPanel;
@@ -67,6 +69,7 @@ public class ProjectPanel extends JPanel {
 						ContactController cCtrl,
 						GroupController gCtrl,
 						TaskController tCtrl,
+						final MsgsController mCtrl,
 						CardLayout cl,
 						ArrayList<Project> projects,
 						boolean edit
@@ -105,15 +108,17 @@ public class ProjectPanel extends JPanel {
 			    							   cCtrl,
 			    							   pCtrl,
 			    							   tCtrl,
+			    							   mCtrl,
 			    							   new CardLayout(),
 			    							   groups,
 			    							   false
 			    							  );
 			    this.contactPan = new ContactPanel(new JPanel(),
-			    								   cCtrl,
+			    								       cCtrl,
 			       								   gCtrl,
 			       								   this.pCtrl,
 			       								   tCtrl,
+			       								   mCtrl,
 			       								   new CardLayout(),
 			       								   contacts,
 			       								   false
@@ -151,6 +156,7 @@ public class ProjectPanel extends JPanel {
 				msg.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent event) {
     						System.out.println("ProjectPanel: try to add msg");
+    						new MsgPopUp(pCtrl, project, mCtrl);
 					}
 				});
 				btnPanel.setLayout(new GridLayout(3,1));

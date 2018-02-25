@@ -21,6 +21,7 @@ import classes.Msgs;
 import classes.Project;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.ProjectController;
 import ihm.ViewBuilder;
 import utils.PenelopDevLogger;
@@ -69,7 +70,7 @@ public class ContactForm extends JPanel  {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public ContactForm(JPanel pan, final ContactController cCtrl,  GroupController gCtrl, ProjectController pCtrl) {
+	public ContactForm(JPanel pan, final ContactController cCtrl,  GroupController gCtrl, ProjectController pCtrl, MsgsController mCtrl) {
 		ArrayList<Project> p = pCtrl.getDAO().get();
 		ArrayList<Group> g = gCtrl.getDAO().get();
 		this.pList = new JList(p.toArray());

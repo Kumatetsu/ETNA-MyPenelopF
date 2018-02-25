@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import DAO.ContactDAO;
 import DAO.DAOFactory;
 import DAO.GroupDAO;
+import DAO.MsgsDAO;
 import DAO.ProjectDAO;
 import DAO.TaskDAO;
 import DataInterface.DataInterface;
@@ -23,11 +24,13 @@ public class AppController {
 	private ProjectController pCtrl;
 	private GroupController gCtrl;
 	private TaskController tCtrl;
+	private MsgsController mCtrl;
 	private HashMap<String, PenelopeController> ctrls = new HashMap<String, PenelopeController>();
 	private ContactDAO cDAO = null;
 	private ProjectDAO pDAO = null;
 	private GroupDAO gDAO = null;
 	private TaskDAO tDAO = null;
+	private MsgsDAO mDAO = null;
 	private BaseFrame Dashboard = null;
 	private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -36,15 +39,18 @@ public class AppController {
 		this.pDAO = (ProjectDAO)DAOFactory.getProjectDAO(di);
 		this.gDAO = (GroupDAO)DAOFactory.getGroupDAO(di);
 		this.tDAO = (TaskDAO)DAOFactory.getTaskDAO(di);
+		this.mDAO = (MsgsDAO)DAOFactory.getMsgsDAO(di);
 		// controllers instaciation adding DAO
 		this.cCtrl = new ContactController(this.cDAO);
 		this.pCtrl = new ProjectController(this.pDAO);
 		this.gCtrl = new GroupController(this.gDAO);
 		this.tCtrl = new TaskController(this.tDAO);
+		this.mCtrl = new MsgsController(this.mDAO);
 		this.ctrls.put("group", this.gCtrl);
 		this.ctrls.put("contact", this.cCtrl);
 		this.ctrls.put("project", this.pCtrl);
 		this.ctrls.put("task", this.tCtrl);
+		this.ctrls.put("msgs", this.mCtrl);
 		for (String key: this.ctrls.keySet())
 			this.ctrls.get(key).init();
 		this.setBaseFrame(new BaseFrame(ctrls));
@@ -53,6 +59,7 @@ public class AppController {
 			this.pCtrl.setDashboard(this.getDashboard());
 			this.gCtrl.setDashboard(this.getDashboard());
 			this.tCtrl.setDashboard(this.getDashboard());
+			this.mCtrl.setDashboard(this.getDashboard());
 		}
 		final DocumentLooker bigBrother = new DocumentLooker((ProjectController)ctrls.get("project"));
 		final ScheduledFuture<?> beeperHandle =

@@ -12,6 +12,7 @@ import classes.Project;
 import classes.Task;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.ProjectController;
 import controllers.TaskController;
 import ihm.contact.ContactForm;
@@ -62,15 +63,18 @@ public class dashboardPanel implements PeneViewListener {
 	private ProjectController pCtrl;
 	private GroupController gCtrl;
 	private TaskController tCtrl;
+	private MsgsController mCtrl;
+	
 	private CardLayout contactCl = new CardLayout();
 	private CardLayout projectCl = new CardLayout();
 	private CardLayout groupCl = new CardLayout();
 	private CardLayout taskCl = new CardLayout();
-	public dashboardPanel(ContactController cCtrl, ProjectController pCtrl, GroupController gCtrl, TaskController tCtrl) {
+	public dashboardPanel(ContactController cCtrl, ProjectController pCtrl, GroupController gCtrl, TaskController tCtrl, MsgsController mCtrl) {
 		this.cCtrl = cCtrl;
 		this.pCtrl = pCtrl;
 		this.gCtrl = gCtrl;
 		this.tCtrl = tCtrl;
+		this.mCtrl = mCtrl;
 		this.mPan = new JPanel();
 	}
 	public JPanel getPanel() {
@@ -106,13 +110,14 @@ public class dashboardPanel implements PeneViewListener {
 			return;
 		}
 		// add contact view
-		this.contactForm = new ContactForm(new JPanel(), this.cCtrl, this.gCtrl, this.pCtrl);
+		this.contactForm = new ContactForm(new JPanel(), this.cCtrl, this.gCtrl, this.pCtrl, this.mCtrl);
 		// get, update and delete contact view
 		this.contactPanel = new ContactPanel(new JPanel(),
 											 this.cCtrl,
 											 this.gCtrl,
 											 this.pCtrl,
 											 this.tCtrl,
+											 this.mCtrl,
 											 this.contactCl,
 											 contacts,
 											 true
@@ -138,13 +143,15 @@ public class dashboardPanel implements PeneViewListener {
 										   this.pCtrl,
 										   this.gCtrl,
 										   this.cCtrl,
-										   this.tCtrl);
+										   this.tCtrl,
+										   this.mCtrl);
 		// get, update, and delete project views
 		this.projectPanel = new ProjectPanel(new JPanel(),
 											 this.pCtrl,
 											 this.cCtrl,
 											 this.gCtrl,
 											 this.tCtrl,
+											 this.mCtrl,
 											 this.projectCl,
 											 projects,
 											 true);
@@ -188,6 +195,7 @@ public class dashboardPanel implements PeneViewListener {
 										 this.cCtrl,
 										 this.pCtrl,
 										 this.tCtrl,
+										 this.mCtrl,	
 										 this.groupCl,
 										 groups,
 										 true
