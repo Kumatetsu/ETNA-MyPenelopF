@@ -10,16 +10,22 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import classes.Group;
+import classes.Msgs;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.ProjectController;
 import controllers.TaskController;
 import ihm.BaseFrame;
+import ihm.MsgPopUp;
 import ihm.ViewBuilder;
 import ihm.contact.ContactPanel;
 import utils.PenelopDevLogger;
@@ -55,6 +61,7 @@ public class GroupPanel extends JPanel {
 					  ContactController cCtrl,
 					  ProjectController pCtrl,
 					  TaskController tCtrl,
+					  final MsgsController mCtrl,
 					  CardLayout cl,
 					  ArrayList<Group> groups,
 					  Boolean edit
@@ -71,6 +78,13 @@ public class GroupPanel extends JPanel {
 	    for (final Group group: groups) {
     		JPanel card = new JPanel();
     		JPanel groupCard = this.getDisplayGroup(group);
+    		ArrayList<Msgs> messages = group.getMessages();
+    		DefaultListModel<String> model = new DefaultListModel<String>();
+    		JList list = new JList(model);
+    		for (int iterator = 0; iterator < messages.size(); iterator++) {
+    			model.addElement(messages.get(iterator).getContent());
+    		}
+    		JScrollPane scrollableList = new JScrollPane(list);
     		log._("GroupPanel constructor: ");
     		log.contacts(group.getUsers());
     		if (edit) {
@@ -79,11 +93,13 @@ public class GroupPanel extends JPanel {
 						   						    gCtrl,
 						   						    pCtrl,
 						   						    tCtrl,
+						   						    mCtrl,
 						   						    new CardLayout(),
 						   						    group.getUsers(),
 						   						    false
 							  					   );
     			JPanel btnPanel = this._vb.getTwoBtnPanel();
+    			
     			JButton del = new JButton("Delete");
     			del.setPreferredSize(this._vb.getButtonSize());
     			del.addActionListener(new ActionListener() {
@@ -98,12 +114,23 @@ public class GroupPanel extends JPanel {
     					new BaseFrame(gCtrl, group);
     				}
     			});
+    			JButton msg = new JButton("add msg");
+    			msg.setPreferredSize(this._vb.getButtonSize());
+    			msg.addActionListener(new ActionListener() {
+    				public void actionPerformed(ActionEvent event) {
+    					System.out.println("add msg in group");
+    					new MsgPopUp(gCtrl, group, mCtrl);
+    				}
+    			});
+    		 	btnPanel.setLayout(new GridLayout(3,1));
     			btnPanel.add(up);
     			btnPanel.add(del);
+    			btnPanel.add(msg);
         		card.add(this.contactPan.getRootPan());
     			card.add(btnPanel);
     		}
     		card.add(groupCard);
+    		card.add(scrollableList);
     		this.groupCards.add(card, group.getId().toString());
 	    }
 	    this.pan.add(this.navigation, BorderLayout.PAGE_START);
@@ -130,8 +157,8 @@ public class GroupPanel extends JPanel {
 	 */
 	private JPanel getDisplayGroup(Group g) {
 		JPanel groupPanel = new JPanel();
-		groupPanel.setLayout(new GridLayout(2, 2, 2, 2));
-		groupPanel.setSize(new Dimension(300, 300));
+		groupPanel.setLayout(new GridLayout(6, 2, 2, 2));
+		groupPanel.setSize(new Dimension(500, 500));
 		groupPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		JLabel idLab = new JLabel("Group n°: ");
 		JLabel id = new JLabel(g.getId().toString());

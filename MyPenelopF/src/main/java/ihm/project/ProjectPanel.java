@@ -10,9 +10,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import classes.Contact;
 import classes.Group;
@@ -21,9 +24,11 @@ import classes.Project;
 import classes.Task;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.ProjectController;
 import controllers.TaskController;
 import ihm.BaseFrame;
+import ihm.MsgPopUp;
 import ihm.ViewBuilder;
 import ihm.contact.ContactPanel;
 import ihm.group.GroupPanel;
@@ -67,6 +72,7 @@ public class ProjectPanel extends JPanel {
 						ContactController cCtrl,
 						GroupController gCtrl,
 						TaskController tCtrl,
+						final MsgsController mCtrl,
 						CardLayout cl,
 						ArrayList<Project> projects,
 						boolean edit
@@ -86,7 +92,7 @@ public class ProjectPanel extends JPanel {
 			// Card and Panel init + layout
 			JPanel card = new JPanel();
 			JPanel projectPan = new JPanel();
-			projectPan.setLayout(new GridLayout(1, 8, 2, 2));
+			projectPan.setLayout(new GridLayout(2, 8, 2, 2));
 			// project content
 			projectPan.add(this.displayProject(project));
 			if (edit) {
@@ -105,15 +111,17 @@ public class ProjectPanel extends JPanel {
 			    							   cCtrl,
 			    							   pCtrl,
 			    							   tCtrl,
+			    							   mCtrl,
 			    							   new CardLayout(),
 			    							   groups,
 			    							   false
 			    							  );
 			    this.contactPan = new ContactPanel(new JPanel(),
-			    								   cCtrl,
+			    								       cCtrl,
 			       								   gCtrl,
 			       								   this.pCtrl,
 			       								   tCtrl,
+			       								   mCtrl,
 			       								   new CardLayout(),
 			       								   contacts,
 			       								   false
@@ -122,11 +130,10 @@ public class ProjectPanel extends JPanel {
 			    // related messages ===================
 			    ArrayList<Msgs> messages = project.getMessages();
 			   	JPanel compiledMsgs = new JPanel();
-			   	if (messages.size() > 0) {
-			   		compiledMsgs.add(new JLabel("Message: "));
-			   	}
+			   	DefaultListModel<String> model = new DefaultListModel<String>();
+			   	JList list = new JList(model);
 			   	for (int iterator = 0; iterator < messages.size(); iterator++) {
-			   		compiledMsgs.add(new JLabel(messages.get(iterator).getContent()));
+			   		model.addElement(messages.get(iterator).getContent());
 			   	}
 			   	projectPan.add(compiledMsgs);
 			    // ====================================
@@ -146,11 +153,23 @@ public class ProjectPanel extends JPanel {
     					new BaseFrame(pCtrl, project);
 					}
 				});
+				JButton msg = new JButton("add msg");
+				msg.setPreferredSize(this._vb.getButtonSize());
+				msg.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent event) {
+    						System.out.println("ProjectPanel: try to add msg");
+    						new MsgPopUp(pCtrl, project, mCtrl);
+					}
+				});
+				btnPanel.setLayout(new GridLayout(3,1));
 				btnPanel.add(up);
 				btnPanel.add(del);
+				btnPanel.add(msg);
+				JScrollPane scrollableList = new JScrollPane(list);
 			    projectPan.add(this.groupPan.getRootPan());
 			    projectPan.add(this.taskPan.getRootPan());
 			    projectPan.add(this.contactPan.getRootPan());
+			    projectPan.add(scrollableList);
 				projectPan.add(btnPanel);
 			}
 			card.add(projectPan);

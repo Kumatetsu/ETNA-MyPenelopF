@@ -93,6 +93,7 @@ public class ContactDAO extends DAO<Contact> implements ContactDAOReceipe, Conta
 			if (user.getId() == c.getId()) {
 				int i = users.indexOf(user);
 				users.set(i, c);
+				System.out.println("updatee de " + user.getName());
 				this.di.writeContacts(users);
 				this.triggerContactChange();
 				return true;

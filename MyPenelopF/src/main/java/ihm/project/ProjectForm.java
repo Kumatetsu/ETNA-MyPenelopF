@@ -20,6 +20,7 @@ import classes.Project;
 import classes.Task;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.ProjectController;
 import controllers.TaskController;
 import ihm.ViewBuilder;
@@ -47,7 +48,8 @@ public class ProjectForm extends JPanel {
 					   final ProjectController pCtrl,
 					   GroupController gCtrl,
 					   ContactController cCtrl,
-					   TaskController tCtrl
+					   TaskController tCtrl,
+					   MsgsController mCtrl
 					  ) {
 		ArrayList<Contact> c = cCtrl.getDAO().get();
 		ArrayList<Group> g = gCtrl.getDAO().get();

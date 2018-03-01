@@ -10,18 +10,24 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
 import classes.Contact;
 import classes.Group;
 import classes.Msgs;
 import classes.Project;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.ProjectController;
 import controllers.TaskController;
 import ihm.BaseFrame;
+import ihm.MsgPopUp;
 import ihm.ViewBuilder;
 import ihm.group.GroupPanel;
 import ihm.project.ProjectPanel;
@@ -57,6 +63,7 @@ public class ContactPanel extends JPanel {
 						GroupController gCtrl,
 						ProjectController pCtrl,
 						TaskController tCtrl,
+						final MsgsController mCtrl,
 						CardLayout cl, 
 						ArrayList<Contact> users,
 						boolean edit
@@ -76,7 +83,7 @@ public class ContactPanel extends JPanel {
 	    	JPanel gridPan = new JPanel();
 	    	JPanel card = new JPanel();
 	        JPanel userPan = new JPanel();
-			GridLayout gl = new GridLayout(1, 3, 5, 5);
+			GridLayout gl = new GridLayout(2, 2, 5, 5);
 			gridPan.setLayout(gl);
 			// groupPanel definition
 	    	ArrayList<Group> userGroups = user.getGroups();
@@ -85,6 +92,7 @@ public class ContactPanel extends JPanel {
 	    								   cCtrl,
 	    								   pCtrl,
 	    								   tCtrl,
+	    								   mCtrl,
 	    								   new CardLayout(),
 	    								   userGroups,
 	    								   false
@@ -96,6 +104,7 @@ public class ContactPanel extends JPanel {
 	    									   cCtrl,
 	    									   gCtrl,
 	    									   tCtrl,
+	    									   mCtrl,
 	    									   new CardLayout(),
 	    									   userProjects,
 	    									   false
@@ -105,16 +114,12 @@ public class ContactPanel extends JPanel {
 	        
 	        // related messages
 	        ArrayList<Msgs> messages = user.getMessages();
-	    	JPanel compiledMsgs = new JPanel();
-	    	if (messages.size() > 0) {
-	    		compiledMsgs.add(new JLabel("Message: "));
-	    	}
+	    	DefaultListModel<String> model = new DefaultListModel<String>();
+	    	JList list = new JList(model);
 	    	for (int iterator = 0; iterator < messages.size(); iterator++) {
-	    		compiledMsgs.add(new JLabel(messages.get(iterator).getContent()));
+	    		model.addElement(messages.get(iterator).getContent());
 	    	}
 	    	userPan.add(contactCard);
-	    	
-	    	//userPan.add(compiledMsgs);
 	        // Delete and Update rely on listeners
 	        if (edit) {
 		        JPanel boutonPane = this._vb.getTwoBtnPanel();
@@ -132,16 +137,28 @@ public class ContactPanel extends JPanel {
 	        			new BaseFrame(cCtrl, user);
 	        		}
 	        	});
+	        	JButton msg = new JButton("add msg");
+	        	msg.setPreferredSize(this._vb.getButtonSize());
+	        	msg.addActionListener(new ActionListener() {
+	        		public void actionPerformed(ActionEvent event) {
+	        			System.out.println("in contractPanel add msg");
+	        			new MsgPopUp(cCtrl, user, mCtrl);
+	        		}
+	        	});
+	        	boutonPane.setLayout(new GridLayout(3,1));
 	        	boutonPane.add(up);
 	        	boutonPane.add(del);
+	        	boutonPane.add(msg);
 	        	userPan.add(boutonPane);
 	        }
+		JScrollPane scrollableList = new JScrollPane(list);
         	gridPan.add(userPan);
         	gridPan.add(groupPan.getRootPan());
         	gridPan.add(projectPan.getRootPan());
-	     	card.add(gridPan);
-	        this.contactCards.add(card, user.getId().toString());
-	    }
+        	gridPan.add(scrollableList);
+	    card.add(gridPan);
+	    this.contactCards.add(card, user.getId().toString());
+	   }
 	    this.pan.add(this.navigation, BorderLayout.PAGE_START);
 	    this.pan.add(this.contactCards, BorderLayout.CENTER);
 	}
@@ -172,8 +189,8 @@ public class ContactPanel extends JPanel {
 	 */
 	private JPanel buildContactDisplay(Contact c) {
 		JPanel contactPanel = new JPanel();
-		contactPanel.setLayout(new GridLayout(3, 2, 2, 2));
-		contactPanel.setSize(new Dimension(300, 300));
+		contactPanel.setLayout(new GridLayout(8, 2, 2, 2));
+		contactPanel.setSize(new Dimension(500, 500));
 		contactPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		JLabel nameLab = new JLabel("Name: ");
 		JLabel name = new JLabel(c.getName());

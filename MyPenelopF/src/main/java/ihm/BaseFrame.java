@@ -23,6 +23,7 @@ import classes.Project;
 import classes.Task;
 import controllers.ContactController;
 import controllers.GroupController;
+import controllers.MsgsController;
 import controllers.PenelopeController;
 import controllers.ProjectController;
 import controllers.TaskController;
@@ -47,6 +48,8 @@ public class BaseFrame extends JFrame {
 	GroupController gCtrl;
 	ProjectController pCtrl;
 	TaskController tCtrl;
+	MsgsController mCtrl;
+	
 	/**
 	 * Tools
 	 */
@@ -78,6 +81,8 @@ public class BaseFrame extends JFrame {
         this.gCtrl = (GroupController)ctrls.get("group");
         this.pCtrl = (ProjectController)ctrls.get("project");
         this.tCtrl = (TaskController)ctrls.get("task");
+        this.mCtrl = (MsgsController)ctrls.get("msgs");
+        
         this.setTitle("MyPenelopF");
         this.setResizable(true);
         this.getContentPane().setLayout(new BorderLayout());
@@ -86,7 +91,7 @@ public class BaseFrame extends JFrame {
         this.setLocation(250, 250);
 
         this.mPan = new menuPanel();
-        this.dPan = new dashboardPanel(this.cCtrl, this.pCtrl, this.gCtrl, this.tCtrl);
+        this.dPan = new dashboardPanel(this.cCtrl, this.pCtrl, this.gCtrl, this.tCtrl, this.mCtrl);
         this.mPan.addViewListener(dPan);
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mPan.getPan(), dPan.getPanel());
         this.getContentPane().add(split, BorderLayout.CENTER);
@@ -219,6 +224,7 @@ public class BaseFrame extends JFrame {
 											 this.gCtrl,
 											 this.pCtrl,
 											 this.tCtrl,
+											 this.mCtrl,
 											 this.cl,
 											 contacts,
 											 true
@@ -239,6 +245,7 @@ public class BaseFrame extends JFrame {
 										 this.cCtrl,
 										 this.pCtrl,
 										 this.tCtrl,
+										 this.mCtrl,
 										 this.cl,
 										 groups,
 										 true);
